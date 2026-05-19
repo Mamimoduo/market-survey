@@ -1,1 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Survey Form</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --primary: #1a1a2e;
+    --accent: #e63946;
+    --accent2: #457b9d;
+    --bg: #f8f7f4;
+    --card: #ffffff;
+    --border: #e0ddd8;
+    --text: #1a1a2e;
+    --muted: #8a8680;
+    --success: #2d6a4f;
+    --step-done: #457b9d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--primary);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.01em;
+  }
+  .header .date-badge {
+    font-size: 0.8rem;
+    background: rgba(255,255,255,0.15);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    overflow-x: auto;
+  }
+  .progress-steps {
+    display: flex;
+    gap: 0;
+    min-width: max-content;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    padding: 4px 10px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .step-item.active {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  .step-item.done {
+    color: var(--step-done);
+    font-weight: 500;
+  }
+  .step-item .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+  .step-item.active .dot { opacity: 1; background: var(--accent); }
+  .step-connector {
+    width: 20px; height: 1px;
+    background: var(--border);
+    align-self: center;
+  }
+
+  /* Container */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  /* Section card */
+  .section-card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* Form fields */
+  .field {
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  label .req { color: var(--accent); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent2);
+    box-shadow: 0 0 0 3px rgba(69,123,157,0.1);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Brand table */
+  .brand-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .brand-table thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 8px;
+    border-bottom: 2px solid var(--border);
+    text-align: left;
+  }
+  .brand-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .brand-table tbody tr:hover { background: #f9f8f6; }
+  .brand-table tbody td {
+    padding: 8px 6px;
+    vertical-align: middle;
+  }
+  .brand-table .row-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    width: 64px;
+  }
+  .brand-table select,
+  .brand-table input[type="number"] {
+    padding: 7px 8px;
+    font-size: 0.83rem;
+    border-radius: 6px;
+  }
+  .brand-table input[type="number"] { width: 100px; }
+
+  /* Remarks field */
+  .remarks-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+  }
+  .btn {
+    padding: 11px 28px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+  .btn-primary:hover { background: #2d2d4e; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-submit {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-submit:hover { background: #c1121f; }
+
+  .step-counter {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* Page sections */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Success */
+  .success-wrap {
+    text-align: center;
+    padding: 80px 24px;
+  }
+  .success-wrap h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--text);
+    margin-bottom: 14px;
+    font-weight: 400;
+  }
+  .success-wrap p {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-bottom: 0;
+  }
+  .btn-new {
+    margin-top: 24px;
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 12px 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Power Automate notice */
+  .pa-notice {
+    background: #eaf4fb;
+    border: 1px solid #bdd5e8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.78rem;
+    color: var(--accent2);
+    margin-top: 16px;
+  }
+  .pa-notice strong { display: block; margin-bottom: 2px; }
+
+  .error-msg {
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-top: 4px;
+    display: none;
+  }
+  .field.error input, .field.error select, .field.error textarea {
+    border-color: var(--accent);
+  }
+  .field.error .error-msg { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Market Survey Form</h1>
+  <span class="date-badge" id="headerDate"></span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-steps">
+    <div class="step-item active" id="step-0"><span class="dot"></span>Basic Info</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-1"><span class="dot"></span>Floor Staff</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-2"><span class="dot"></span>Sales Amount</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-3"><span class="dot"></span>Air Con</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-4"><span class="dot"></span>Refrigerator</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-5"><span class="dot"></span>Freezer</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-6"><span class="dot"></span>Washing Machine</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-7"><span class="dot"></span>TV</div>
+    <div class="step-connector"></div>
+    <div class="step-item" id="step-8"><span class="dot"></span>Water Heater</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- PAGE 0: Basic Info -->
+  <div class="page active" id="page-0">
+    <div class="section-card">
+      <div class="section-title">Basic Information</div>
+      <div class="section-subtitle">Shop details and visit summary</div>
+
+      <div class="field">
+        <label>Date</label>
+        <input type="text" id="field-date" readonly>
+      </div>
+      <div class="field" id="f-shopname">
+        <label>Shop Name <span class="req">*</span></label>
+        <input type="text" id="field-shopname" placeholder="Enter shop full name">
+        <div class="error-msg">Shop name is required</div>
+      </div>
+      <div class="field" id="f-weekday">
+        <label>Weekday Walk-In <span class="req">*</span></label>
+        <input type="number" id="field-weekday" min="0" placeholder="e.g. 50">
+        <div class="error-msg">Please enter a number</div>
+      </div>
+      <div class="field" id="f-weekend">
+        <label>Weekend Walk-In <span class="req">*</span></label>
+        <input type="number" id="field-weekend" min="0" placeholder="e.g. 120">
+        <div class="error-msg">Please enter a number</div>
+      </div>
+      <div class="field">
+        <label>In-Store Promotion Activities</label>
+        <textarea id="field-promo" placeholder="e.g. Dealer Discount Price 5–10%"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 1: Staff Count -->
+  <div class="page" id="page-1">
+    <div class="section-card">
+      <div class="section-title">Floor Staff in Store</div>
+      <div class="section-subtitle">Number of sales staff per brand in this store</div>
+      <table class="brand-table" id="table-staff">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Brand</th>
+            <th>No. of Staff</th>
+          </tr>
+        </thead>
+        <tbody id="staff-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-staff-remarks" placeholder="Additional notes on competitor staff..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 2: Sales Amount -->
+  <div class="page" id="page-2">
+    <div class="section-card">
+      <div class="section-title">Sales Amount by Brand</div>
+      <div class="section-subtitle">Estimated sales amount per brand (RM)</div>
+      <table class="brand-table" id="table-sales">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Brand</th>
+            <th>Sales Amount (RM)</th>
+          </tr>
+        </thead>
+        <tbody id="sales-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-sales-remarks" placeholder="Additional notes on sales..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 3: Air Con -->
+  <div class="page" id="page-3">
+    <div class="section-card">
+      <div class="section-title">Brand Sold — Air Conditioner</div>
+      <div class="section-subtitle">Units sold per brand</div>
+      <table class="brand-table">
+        <thead>
+          <tr><th>#</th><th>Brand</th><th>Units Sold</th></tr>
+        </thead>
+        <tbody id="aircon-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-aircon-remarks" placeholder="Additional notes..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 4: Refrigerator -->
+  <div class="page" id="page-4">
+    <div class="section-card">
+      <div class="section-title">Brand Sold — Refrigerator</div>
+      <div class="section-subtitle">Units sold per brand</div>
+      <table class="brand-table">
+        <thead>
+          <tr><th>#</th><th>Brand</th><th>Units Sold</th></tr>
+        </thead>
+        <tbody id="fridge-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-fridge-remarks" placeholder="Additional notes..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 5: Freezer -->
+  <div class="page" id="page-5">
+    <div class="section-card">
+      <div class="section-title">Brand Sold — Freezer</div>
+      <div class="section-subtitle">Units sold per brand</div>
+      <table class="brand-table">
+        <thead>
+          <tr><th>#</th><th>Brand</th><th>Units Sold</th></tr>
+        </thead>
+        <tbody id="freezer-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-freezer-remarks" placeholder="Additional notes..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 6: Washing Machine -->
+  <div class="page" id="page-6">
+    <div class="section-card">
+      <div class="section-title">Brand Sold — Washing Machine</div>
+      <div class="section-subtitle">Units sold per brand</div>
+      <table class="brand-table">
+        <thead>
+          <tr><th>#</th><th>Brand</th><th>Units Sold</th></tr>
+        </thead>
+        <tbody id="washer-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-washer-remarks" placeholder="Additional notes..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 7: TV -->
+  <div class="page" id="page-7">
+    <div class="section-card">
+      <div class="section-title">Brand Sold — TV</div>
+      <div class="section-subtitle">Units sold per brand</div>
+      <table class="brand-table">
+        <thead>
+          <tr><th>#</th><th>Brand</th><th>Units Sold</th></tr>
+        </thead>
+        <tbody id="tv-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-tv-remarks" placeholder="Additional notes..."></textarea>
+    </div>
+  </div>
+
+  <!-- PAGE 8: Water Heater -->
+  <div class="page" id="page-8">
+    <div class="section-card">
+      <div class="section-title">Brand Sold — Water Heater</div>
+      <div class="section-subtitle">Units sold per brand</div>
+      <table class="brand-table">
+        <thead>
+          <tr><th>#</th><th>Brand</th><th>Units Sold</th></tr>
+        </thead>
+        <tbody id="waterheater-rows"></tbody>
+      </table>
+      <div class="remarks-label">Remarks</div>
+      <textarea id="field-waterheater-remarks" placeholder="Additional notes..."></textarea>
+    </div>
+    <div class="pa-notice">
+      <strong>📋 Submission Note</strong>
+      Clicking Submit will send all responses to your connected Power Automate flow. Make sure to configure the webhook URL in the script before deploying.
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="page" id="page-success">
+    <div class="section-card success-wrap">
+      <h2>Thank you !</h2>
+      <p>Your survey has been submitted successfully.</p>
+      <button class="btn-new" onclick="resetForm()">Submit Another Response</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Nav Bar -->
+<div class="nav-bar" id="navBar">
+  <button class="btn btn-secondary" id="btnBack" onclick="goBack()" style="visibility:hidden">← Back</button>
+  <span class="step-counter" id="stepCounter">Step 1 of 7</span>
+  <button class="btn btn-primary" id="btnNext" onclick="goNext()">Next →</button>
+</div>
+
+<script>
+  const BRANDS = [
+    "Acson","AEG","Beko","Ariston","Bosch","Brandt","Camel","Carrier",
+    "Daikin","Daewoo","Elba","Electrolux","Faber","Fotile","Gorenje",
+    "Haier","Hisense","Hitachi","Joven","LG","Midea","Miele",
+    "Mitsubishi Electric","Orca","Panasonic","Rinnai","Samsung","Sharp",
+    "Siemens","Smeg","Toshiba","Uniflame","Whirlpool","Winia","York","Zanussi"
+  ];
+
+  // ---- CONFIG: Replace with your Power Automate HTTP trigger URL ----
+  const POWER_AUTOMATE_URL = "https://default35f885b5ae784a9981ff80e69a9cc1.a1.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/61d02b46d0904b039bde91dd5ce44400/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=P-inFyX4Moom_6NBk-WCSNdY37MLDJxxKTtKRRCtbaE";
+  // ------------------------------------------------------------------
+
+  const TOTAL_PAGES = 9;
+  let currentPage = 0;
+
+  // Set date
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-GB');
+  document.getElementById('headerDate').textContent = dateStr;
+  document.getElementById('field-date').value = dateStr;
+
+  function buildBrandDropdown(selectedVal) {
+    let opts = `<option value="">-- Select Brand --</option>`;
+    BRANDS.forEach(b => {
+      opts += `<option value="${b}" ${b === selectedVal ? 'selected' : ''}>${b}</option>`;
+    });
+    return opts;
+  }
+
+  function buildRows(tbodyId, count, inputSuffix, numPlaceholder) {
+    const tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = '';
+    for (let i = 1; i <= count; i++) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="row-label">Brand ${i}</td>
+        <td><select id="${inputSuffix}-brand-${i}">${buildBrandDropdown('')}</select></td>
+        <td><input type="number" id="${inputSuffix}-num-${i}" min="0" placeholder="${numPlaceholder}"></td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  // Build all tables
+  buildRows('staff-rows', 10, 'staff', '0');
+  buildRows('sales-rows', 10, 'sales', '0');
+  buildRows('aircon-rows', 10, 'aircon', '0');
+  buildRows('fridge-rows', 10, 'fridge', '0');
+  buildRows('freezer-rows', 10, 'freezer', '0');
+  buildRows('washer-rows', 10, 'washer', '0');
+  buildRows('tv-rows', 10, 'tv', '0');
+  buildRows('waterheater-rows', 10, 'waterheater', '0');
+
+  function showPage(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${n === TOTAL_PAGES ? 'success' : n}`).classList.add('active');
+
+    // Update progress steps
+    for (let i = 0; i < TOTAL_PAGES; i++) {
+      const el = document.getElementById(`step-${i}`);
+      if (!el) continue;
+      el.classList.remove('active', 'done');
+      if (i < n) el.classList.add('done');
+      else if (i === n) el.classList.add('active');
+    }
+
+    // Nav bar
+    const navBar = document.getElementById('navBar');
+    const btnBack = document.getElementById('btnBack');
+    const btnNext = document.getElementById('btnNext');
+    const counter = document.getElementById('stepCounter');
+
+    if (n === TOTAL_PAGES) {
+      navBar.style.display = 'none';
+      return;
+    }
+    navBar.style.display = 'flex';
+    btnBack.style.visibility = n === 0 ? 'hidden' : 'visible';
+    counter.textContent = `Step ${n + 1} of ${TOTAL_PAGES}`;
+    if (n === TOTAL_PAGES - 1) {
+      btnNext.textContent = 'Submit ✓';
+      btnNext.className = 'btn btn-submit';
+    } else {
+      btnNext.textContent = 'Next →';
+      btnNext.className = 'btn btn-primary';
+    }
+  }
+
+  function validatePage0() {
+    let valid = true;
+    const fields = [
+      { id: 'f-shopname', inputId: 'field-shopname', type: 'text' },
+      { id: 'f-weekday', inputId: 'field-weekday', type: 'number' },
+      { id: 'f-weekend', inputId: 'field-weekend', type: 'number' },
+    ];
+    fields.forEach(f => {
+      const wrap = document.getElementById(f.id);
+      const val = document.getElementById(f.inputId).value.trim();
+      if (!val) {
+        wrap.classList.add('error');
+        valid = false;
+      } else {
+        wrap.classList.remove('error');
+      }
+    });
+    return valid;
+  }
+
+  function collectData() {
+    const submissionId = 'SID-' + Date.now().toString(36).toUpperCase();
+    const submittedDate = new Date().toLocaleDateString('en-GB');
+    const shopName = document.getElementById('field-shopname').value;
+
+    // Survey_Header — one row
+    const header = {
+      submissionId,
+      ShopName: shopName,
+      SubmissionDate: submittedDate,
+      WeekdayWalkin: document.getElementById('field-weekday').value,
+      WeekendWalkin: document.getElementById('field-weekend').value,
+      InStorePromotion: document.getElementById('field-promo').value
+    };
+
+    // Survey_FloorStaff — one row per brand
+    const floorStaff = [];
+    for (let i = 1; i <= 10; i++) {
+      const brand = document.getElementById(`staff-brand-${i}`)?.value || '';
+      const value = document.getElementById(`staff-num-${i}`)?.value || '';
+      if (brand || value) {
+        floorStaff.push({
+          submissionId,
+          ShopName: shopName,
+          SubmittedDate: submittedDate,
+          BrandName: brand,
+          NumberOfStaff: value
+        });
+      }
+    }
+
+    // Survey_StoreShare — one row per brand
+    const storeShare = [];
+    const salesRemarks = document.getElementById('field-sales-remarks').value;
+    for (let i = 1; i <= 10; i++) {
+      const brand = document.getElementById(`sales-brand-${i}`)?.value || '';
+      const value = document.getElementById(`sales-num-${i}`)?.value || '';
+      if (brand || value) {
+        storeShare.push({
+          submissionId,
+          ShopName: shopName,
+          SubmissionDate: submittedDate,
+          BrandName: brand,
+          SalesAmount: value,
+          Remark: salesRemarks
+        });
+      }
+    }
+
+    // Survey_BrandSold — all product categories into one array
+    const brandSold = [];
+    const productSections = [
+      { prefix: 'aircon',      category: 'Air Con',          remarks: 'field-aircon-remarks' },
+      { prefix: 'fridge',      category: 'Refrigerator',     remarks: 'field-fridge-remarks' },
+      { prefix: 'freezer',     category: 'Freezer',          remarks: 'field-freezer-remarks' },
+      { prefix: 'washer',      category: 'Washing Machine',  remarks: 'field-washer-remarks' },
+      { prefix: 'tv',          category: 'TV',               remarks: 'field-tv-remarks' },
+      { prefix: 'waterheater', category: 'Water Heater',     remarks: 'field-waterheater-remarks' },
+    ];
+
+    productSections.forEach(s => {
+      const remarks = document.getElementById(s.remarks)?.value || '';
+      for (let i = 1; i <= 10; i++) {
+        const brand = document.getElementById(`${s.prefix}-brand-${i}`)?.value || '';
+        const value = document.getElementById(`${s.prefix}-num-${i}`)?.value || '';
+        if (brand || value) {
+          brandSold.push({
+            submissionId,
+            ShopName: shopName,
+            SubmissionDate: submittedDate,
+            ProductCategory: s.category,
+            BrandName: brand,
+            UnitSold: value,
+            Remark: remarks
+          });
+        }
+      }
+    });
+
+    return { header, floorStaff, storeShare, brandSold };
+  }
+
+  async function submitForm() {
+    const { header, floorStaff, storeShare, brandSold } = collectData();
+
+    if (POWER_AUTOMATE_URL === "YOUR_POWER_AUTOMATE_WEBHOOK_URL_HERE") {
+      console.log("=== Survey_Header ===", JSON.stringify(header, null, 2));
+      console.log("=== Survey_FloorStaff ===", JSON.stringify(floorStaff, null, 2));
+      console.log("=== Survey_StoreShare ===", JSON.stringify(storeShare, null, 2));
+      console.log("=== Survey_BrandSold ===", JSON.stringify(brandSold, null, 2));
+      currentPage = TOTAL_PAGES;
+      showPage(TOTAL_PAGES);
+      return;
+    }
+
+    try {
+      const btnNext = document.getElementById('btnNext');
+      btnNext.textContent = 'Submitting...';
+      btnNext.disabled = true;
+
+      await fetch(POWER_AUTOMATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ header, floorStaff, storeShare, brandSold })
+      });
+
+      currentPage = TOTAL_PAGES;
+      showPage(TOTAL_PAGES);
+    } catch (err) {
+      alert('Submission failed. Please check your connection and try again.');
+      const btnNext = document.getElementById('btnNext');
+      btnNext.textContent = 'Submit ✓';
+      btnNext.disabled = false;
+    }
+  }
+
+  function goNext() {
+    if (currentPage === 0 && !validatePage0()) return;
+    if (currentPage === TOTAL_PAGES - 1) {
+      submitForm();
+      return;
+    }
+    currentPage++;
+    showPage(currentPage);
+    window.scrollTo(0, 0);
+  }
+
+  function goBack() {
+    if (currentPage > 0) {
+      currentPage--;
+      showPage(currentPage);
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function resetForm() {
+    currentPage = 0;
+    document.querySelectorAll('input[type="text"]:not(#field-date), input[type="number"], textarea').forEach(el => el.value = '');
+    document.querySelectorAll('select').forEach(el => el.value = '');
+    document.querySelectorAll('.field.error').forEach(el => el.classList.remove('error'));
+    document.getElementById('navBar').style.display = 'flex';
+    showPage(0);
+    window.scrollTo(0, 0);
+  }
+
+  showPage(0);
+</script>
+</body>
+</html>
 
